@@ -1,5 +1,4 @@
 import axios from 'axios';
-
-const SONG_ROOT = 'http://localhost:8000/api/song';
+import { SONG_ROOT } from './common';
 
 export const music_list_api = () => axios.get(`${SONG_ROOT}/music/`);

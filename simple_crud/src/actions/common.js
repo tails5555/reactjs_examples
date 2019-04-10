@@ -1,0 +1,1 @@
+export const SONG_ROOT = 'http://localhost:8000/api/song';
