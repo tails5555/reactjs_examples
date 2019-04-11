@@ -1,6 +1,6 @@
 import React, { Fragment, PureComponent } from 'react';
 
-import { music_list_api } from 'actions/music_action';
+import { music_list_api, music_update_api } from 'actions/music_action';
 
 import Property from './music/Property';
 import Element from './music/Element';
@@ -36,6 +36,7 @@ class MusicList extends PureComponent {
                     key={ music.id } 
                     music={ music } 
                     changeAction={ (event) => this._handle_change_property(music.id, event) }
+                    updateAction={ () => this._handle_submit('UPDATE', music) }
                     editAction={ () => this._handle_click_checking(music, true) } 
                     cancelAction={ () => this._handle_click_checking(music, false) } 
                 />
@@ -106,6 +107,50 @@ class MusicList extends PureComponent {
         this.setState({
             musics: tmp_musics
         });
+    }
+
+    _handle_submit = (type, music) => {
+        const { musics, selected } = this.state;
+        let tmp_musics = musics.slice();
+
+        switch(type) {
+            case 'UPDATE' :
+                music_update_api(music && music.id, music)
+                    .then(res => { // 수정이 제대로 되면 수정 데이터를 서버의 Response 에서 받아와 목록에서 보여줍니다.
+                        const { status } = res;
+                        if(status === 200) {
+                            alert('노래 정보 수정이 완료 되었습니다.');
+
+                            const { data } = res;
+                            data.checked = false;
+                            
+                            tmp_musics = tmp_musics.map(m => m.id === data.id ? data : m);
+
+                            this.setState({
+                                musics: tmp_musics
+                            });
+                        }
+                    })
+                    .catch(error => { // 수정이 안 되면 캐시에 있는 원본 데이터로 지정합니다.
+                        alert(error && error.message);
+                        tmp_musics = tmp_musics.map(m => m.id === music.id ? { ...selected, checked: false } : m);
+
+                        this.setState({
+                            musics: tmp_musics,
+                            selected: null
+                        });
+                    });
+                
+                break;
+
+            case 'CREATE' :
+                alert('추가');
+                break;
+
+            default :
+                alert('SUBMIT 행위는 UPDATE, CREATE 둘 중 하나만 작동합니다.');
+                break;
+        }
     }
 
     render() {
