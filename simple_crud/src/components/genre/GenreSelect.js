@@ -33,7 +33,8 @@ class GenreSelect extends PureComponent {
         const { name, value, act_change } = this.props;
         return (
             <Fragment>
-                <select className="form-control" name={ name } value={ value } onChange={ act_change }>
+                <select id="genre" className="form-control" name={ name } value={ value } onChange={ act_change }>
+                    <option value="null">-- 선택 --</option>
                     { this._render_options() }                
                 </select> 
             </Fragment>

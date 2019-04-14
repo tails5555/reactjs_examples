@@ -1,14 +1,15 @@
 import React, { Fragment, PureComponent } from 'react';
 
-import { music_list_api, music_update_api } from 'actions/music_action';
+import { music_list_api, music_create_api, music_update_api } from 'actions/music_action';
 
-import Property from './music/Property';
-import Element from './music/Element';
+import Property from 'components/music/Property';
+import Element from 'components/music/Element';
+import Instance from 'components/music/Instance';
 
 class MusicList extends PureComponent {
     constructor(props) {
         super(props);
-        this.state = { musics: [], selected: null };
+        this.state = { musics: [], selected: null, insertCheck: false };
     }
     
     componentDidMount() {
@@ -26,6 +27,25 @@ class MusicList extends PureComponent {
             .catch(error => {
                 alert(error && error.message);
             });
+    }
+
+    _render_instance = () => {
+        const { insertCheck } = this.state;
+
+        const btn_render = insertCheck ? 'btn btn-danger' : 'btn btn-info';
+        const btn_context = insertCheck ? '취소' : '추가';
+        const icon_render = insertCheck ? 'fas fa-times' : 'fas fa-plus';
+        
+        return (
+            <Fragment>
+                <div className="text-right" style={ { margin: '10px' } }>
+                    <button className={ btn_render } onClick={ () => this._handle_click_insert() }>
+                        <i className={ icon_render } /> { btn_context }
+                    </button>
+                </div>
+                { insertCheck ? <Instance act_submit={ this._handle_submit } /> : null }
+            </Fragment>
+        );
     }
 
     _render_musics = () => {
@@ -93,6 +113,13 @@ class MusicList extends PureComponent {
         });
     }
 
+    _handle_click_insert = () => {
+        const { insertCheck } = this.state;
+        this.setState({
+            insertCheck: !insertCheck
+        });
+    }
+
     _handle_change_property = (id, event) => {
         const { musics } = this.state;
         const property = event.target.name;
@@ -144,7 +171,31 @@ class MusicList extends PureComponent {
                 break;
 
             case 'CREATE' :
-                alert('추가');
+                if(!music.genre) {
+                    alert('장르 선택을 한 번 더 확인 부탁 드립니다.');
+                } else {
+                    music_create_api(music)
+                        .then(res => { // 노래 정보 추가할 때 정상 처리 되면 맨 뒤에 넣어줍니다.
+                            const { status } = res;
+                            if(status === 201) { // 추가가 완료되면 201 CREATED 상태로 넘깁니다.
+                                alert('노래 정보 추가가 완료 되었습니다.');
+
+                                const { data } = res;
+                                data.checked = false;
+                                
+                                tmp_musics.push(data);
+
+                                this.setState({
+                                    musics: tmp_musics,
+                                    insertCheck: false
+                                });
+                            }
+                        })
+                        .catch(error => { // 노래 정보 추가할 때 에러가 나면 확인 창만 보여줍니다.
+                            alert(error && error.message);
+                        });
+                }
+
                 break;
 
             default :
@@ -156,6 +207,7 @@ class MusicList extends PureComponent {
     render() {
         return (
             <Fragment>
+                { this._render_instance() }
                 <table className="table table-striped">
                     <thead>
                         <Property />
