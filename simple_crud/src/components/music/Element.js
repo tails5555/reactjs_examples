@@ -25,12 +25,12 @@ const SubmitButton = ({ act_submit }) =>
 
 const Element = ({ music, changeAction, editAction, cancelAction, updateAction, deleteAction }) => (
     <tr>
-        <td>{ music.id }</td>
-        <td>{ !music.checked ? music.title : <FieldProperty name="title" value={ music.title } act_change={ changeAction } /> }</td>
-        <td>{ !music.checked ? music.singer : <FieldProperty name="singer" value={ music.singer } act_change={ changeAction } /> }</td>
-        <td>{ !music.checked ? music.year : <FieldProperty name="year" value={ music.year } act_change={ changeAction } /> }</td>
-        <td>{ !music.checked ? music.genre && music.genre.name : <GenreSelect name="genre" value={ JSON.stringify(music.genre) } act_change={ changeAction } /> }</td>
-        <td className="text-center">
+        <td className="text-center align-middle">{ music.id }</td>
+        <td className="text-center align-middle">{ !music.checked ? music.title : <FieldProperty name="title" value={ music.title } act_change={ changeAction } /> }</td>
+        <td className="text-center align-middle">{ !music.checked ? music.singer : <FieldProperty name="singer" value={ music.singer } act_change={ changeAction } /> }</td>
+        <td className="text-center align-middle">{ !music.checked ? music.year : <FieldProperty name="year" value={ music.year } act_change={ changeAction } /> }</td>
+        <td className="text-center align-middle">{ !music.checked ? music.genre && music.genre.name : <GenreSelect name="genre" value={ JSON.stringify(music.genre) } act_change={ changeAction } /> }</td>
+        <td className="text-center align-middle">
             <ButtonGroup>
                 <CheckButton checked={ music.checked } act_edit={ editAction } act_cancel={ cancelAction } />
                 { music.checked ? <SubmitButton act_submit={ updateAction } /> : null }

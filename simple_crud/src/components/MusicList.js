@@ -32,7 +32,7 @@ class MusicList extends PureComponent {
     _render_instance = () => {
         const { insertCheck } = this.state;
 
-        const btn_render = insertCheck ? 'btn btn-danger' : 'btn btn-info';
+        const btn_render = insertCheck ? 'btn btn-danger' : 'btn btn-primary';
         const btn_context = insertCheck ? '취소' : '추가';
         const icon_render = insertCheck ? 'fas fa-times' : 'fas fa-plus';
         

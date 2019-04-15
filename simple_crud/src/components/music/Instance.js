@@ -57,7 +57,7 @@ class Instance extends PureComponent {
                     </div>
                     <div style={{ marginTop: '10px' }}>
                         <button type="button" className="btn btn-success btn-block" onClick={ () => act_submit('CREATE', music)}>
-                            <i className="fas fa-check" /> 추가
+                            <i className="fas fa-check" /> 완료
                         </button>
                     </div>    
                 </form>
