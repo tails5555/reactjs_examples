@@ -23,7 +23,7 @@ const SubmitButton = ({ act_submit }) =>
         <i className="fas fa-save" />
     </button>
 
-const Element = ({ music, changeAction, editAction, cancelAction, updateAction }) => (
+const Element = ({ music, changeAction, editAction, cancelAction, updateAction, deleteAction }) => (
     <tr>
         <td>{ music.id }</td>
         <td>{ !music.checked ? music.title : <FieldProperty name="title" value={ music.title } act_change={ changeAction } /> }</td>
@@ -34,6 +34,13 @@ const Element = ({ music, changeAction, editAction, cancelAction, updateAction }
             <ButtonGroup>
                 <CheckButton checked={ music.checked } act_edit={ editAction } act_cancel={ cancelAction } />
                 { music.checked ? <SubmitButton act_submit={ updateAction } /> : null }
+                { 
+                    !music.checked ? (
+                        <button className="btn btn-secondary" onClick={ deleteAction }>
+                            <i className="fas fa-trash" />
+                        </button>
+                    ) : null
+                }
             </ButtonGroup>
         </td>
     </tr>

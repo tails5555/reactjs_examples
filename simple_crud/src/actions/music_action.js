@@ -14,3 +14,8 @@ export const music_update_api = (id, data) => axios({
     method: 'put',
     data
 });
+
+export const music_delete_by_id_api = (id) => axios({
+    url: `${ SONG_ROOT }/music/${id}/`,
+    method: 'delete'
+});

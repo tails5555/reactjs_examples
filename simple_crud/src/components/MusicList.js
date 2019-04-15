@@ -1,6 +1,6 @@
 import React, { Fragment, PureComponent } from 'react';
 
-import { music_list_api, music_create_api, music_update_api } from 'actions/music_action';
+import { music_list_api, music_create_api, music_update_api, music_delete_by_id_api } from 'actions/music_action';
 
 import Property from 'components/music/Property';
 import Element from 'components/music/Element';
@@ -57,6 +57,7 @@ class MusicList extends PureComponent {
                     music={ music } 
                     changeAction={ (event) => this._handle_change_property(music.id, event) }
                     updateAction={ () => this._handle_submit('UPDATE', music) }
+                    deleteAction={ () => this._handle_click_delete(music) }
                     editAction={ () => this._handle_click_checking(music, true) } 
                     cancelAction={ () => this._handle_click_checking(music, false) } 
                 />
@@ -118,6 +119,31 @@ class MusicList extends PureComponent {
         this.setState({
             insertCheck: !insertCheck
         });
+    }
+
+    _handle_click_delete = (music) => {
+        const conf = window.confirm(`${ music && music.title } 노래를 삭제합니다. 계속 진행 하시겠습니까?`);
+        if(conf){
+            const { musics } = this.state;
+            let tmp_musics = musics.slice();
+            music_delete_by_id_api(music && music.id)
+                .then(res => {
+                    const { status } = res;
+                    if(status === 204){ // 삭제가 정상적으로 진행되면 204 NO CONTENT 상태를 보냅니다.
+                        alert('노래가 정상적으로 삭제 되었습니다.');
+                        
+                        const idx = tmp_musics.map(m => m.id).indexOf(music && music.id);
+                        tmp_musics.splice(idx, 1);
+                        
+                        this.setState({
+                            musics: tmp_musics
+                        });
+                    }
+                })
+                .catch(error => { // 노래를 삭제할 때 에러가 나면 확인 창만 보여줍니다.
+                    alert(error && error.message);
+                });
+        }
     }
 
     _handle_change_property = (id, event) => {
