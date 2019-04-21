@@ -31,11 +31,11 @@ class CategoryNavBar extends PureComponent {
         const { categories } = this.state;
 
         const { pathname, search } = location;
-        const active = (id) => pathname.includes('/bbs') && search.includes(`id=${id}`);
+        const active = (id) => pathname.includes('/bbs') && search.includes(`category=${id}`);
         
         return categories.map(category => (
             <li className={ active(category.id) ? 'nav-item active' : 'nav-item' } key={ category.id } style={{ textDecoration : active(category.id) ? 'underline' : 'none' }}>
-                <Link className="nav-link" to={`/bbs/list?id=${category.id}&pg=1`}>
+                <Link className="nav-link" to={`/bbs/list?category=${category.id}&page=1`}>
                     { category.name }
                 </Link>
             </li>
